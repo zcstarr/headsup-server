@@ -1,0 +1,89 @@
+{
+  "openrpc": "1.2.4",
+  "info": {
+    "description": "Headsup Server API",
+    "license": {
+      "name": "Apache 2.0"
+    },
+    "title": "HeadsUpServer",
+    "version": "0.0.0-development"
+  },
+  "methods": [
+    {
+      "name": "createNftFeedMetadata",
+      "params": [
+        {
+          "name": "feedSymbol",
+          "schema": {
+            "$ref": "#/components/schemas/FeedSymbol"
+          },
+          "required": true
+        },
+        {
+          "name": "feedName",
+          "schema": {
+            "$ref": "#/components/schemas/FeedName"
+          },
+          "required": true
+        },
+        {
+          "name": "feedDesc",
+          "schema": {
+            "$ref": "#/components/schemas/FeedDesc"
+          },
+          "required": true
+        }
+      ],
+      "result": {
+        "name": "CreateNftFeedMetadataResult",
+        "schema": {
+          "$ref": "#/components/schemas/NftFeedMetadata"
+        }
+      }
+    }
+  ],
+  "components": {
+    "contentDescriptors": {
+    },
+    "schemas": {
+      "Cid": {
+        "title": "cid",
+        "type": "string"
+      },
+      "JsonUrl": {
+        "title": "JsonUrl",
+        "type": "string"
+      },
+      "NftFeedMetadata": {
+        "title": "nftFeedMetadata",
+        "type": "object",
+        "properties": {
+          "cid": {
+            "$ref": "#/components/schemas/Cid"
+          },
+          "jsonUrl": {
+            "$ref": "#/components/schemas/JsonUrl"
+          }
+        }
+      },
+      "FeedDesc": {
+        "title": "feedDesc",
+        "$comment": "A feed description",
+        "type": "string"
+      },
+      "FeedName": {
+        "title": "feedName",
+        "$comment": "A feedName",
+        "type": "string"
+      },
+      "FeedSymbol": {
+        "title": "feedSymbol",
+        "type": "string"
+      },
+      "Address": {
+        "title": "address",
+        "type": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "$id": "lsp4_metadata_schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A metadata schema for Lukso/ LSP4",
+  "type": "object",
+  "$ref": "#/definitions/LSP4Metadata",
+  "definitions": {
+    "LSP4Metadata": {
+      "title": "LSP4Metadata",
+      "type": "object",
+      "properties": {
+        "description": {
+          "$ref": "#/definitions/description"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "icon": {
+          "$ref": "#/definitions/icon"
+        },
+        "images": {
+          "$ref": "#/definitions/images"
+        },
+        "assets": {
+          "$ref": "#/definitions/assets"
+        }
+      }
+    },
+    "description": {
+      "type": "string",
+      "title": "description"
+    },
+    "links": {
+      "title": "links",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/link"
+      }
+    },
+    "icon": {
+      "title": "icon",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/image"
+      }
+    },
+    "images": {
+      "title": "images",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/imageSet"
+      }
+    },
+    "assets": {
+      "title": "assets",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/asset"
+      }
+    },
+    "asset": {
+      "title": "asset",
+      "type": "object",
+      "properties": {
+        "hashFunction": {
+          "$ref": "#/definitions/hashFunction"
+        },
+        "hash": {
+          "$ref": "#/definitions/hash"
+        },
+        "url": {
+          "$ref": "#/definitions/url"
+        },
+        "fileType": {
+          "$ref": "#/definitions/fileType"
+        }
+      },
+      "required": [
+        "hashFunction",
+        "hash",
+        "url",
+        "fileType"
+      ]
+    },
+    "hashFunction": {
+      "title": "hashFunction",
+      "type": "string"
+    },
+    "hash": {
+      "title": "hash",
+      "type": "string",
+      "$comment": "keccack256(bytes)"
+    },
+    "height": {
+      "title": "height",
+      "type": "number"
+    },
+    "width": {
+      "title": "width",
+      "type": "number"
+    },
+    "url": {
+      "title": "url",
+      "type": "string"
+    },
+    "fileType": {
+      "title": "fileType",
+      "type": "string"
+    },
+    "link": {
+      "title": "link",
+      "type": "object",
+      "properties": {
+        "title": {
+          "title": "title",
+          "type": "string"
+        },
+        "url": {
+          "$ref": "#/definitions/url"
+        }
+      }
+    },
+    "imageSet": {
+      "title": "imageSet",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/image"
+      }
+    },
+    "image": {
+      "title":"image",
+      "type": "object",
+      "properties": {
+        "width": {
+          "$ref": "#/definitions/width"
+        },
+        "height": {
+          "$ref": "#/definitions/height"
+        },
+        "hashFunction": {
+          "$ref": "#/definitions/hashFunction"
+        },
+        "hash": {
+          "$ref": "#/definitions/hash"
+        },
+        "url": {
+          "$ref": "#/definitions/url"
+        }
+      }
+    }
+  }
+}

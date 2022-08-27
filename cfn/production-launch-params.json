@@ -1,0 +1,30 @@
+[
+  {
+    "ParameterKey": "ApplicationName",
+    "ParameterValue": "headsup-server"
+  },
+  {
+    "ParameterKey": "KeyPairName",
+    "ParameterValue": "headsup-server-deployer"
+  },
+  {
+    "ParameterKey": "InstanceType",
+    "ParameterValue": "a1.medium"
+  },
+  {
+    "ParameterKey": "DomainName",
+    "ParameterValue": "nft-api.swapp.land"
+  },
+  {
+    "ParameterKey": "HostedZoneId",
+    "ParameterValue": "Z01964351TKNB6VCTXGS5"
+  },
+  {
+    "ParameterKey": "EnvironmentName",
+    "ParameterValue": "production"
+  },
+  {
+    "ParameterKey": "VolumeSize",
+    "ParameterValue": "8"
+  }
+]

@@ -1,0 +1,52 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+import WalletIndexerApi from "headsup-server-client";
+import net, { AddressInfo } from "net";
+import { Server } from "@open-rpc/server-js";
+import assert from "assert";
+import  start from "./server";
+
+const getFreePort = (): Promise<number> => new Promise((resolve, reject) => {
+  const server = net.createServer();
+  server.on("error", reject);
+  server.listen(0, () => {
+    const { port } = server.address() as AddressInfo;
+    server.close(() => {
+      resolve(port);
+    });
+  });
+});
+
+describe("Integration test for wallet indexer server", () => {
+
+  let client: WalletIndexerApi;
+  let server: Server;
+
+  beforeAll(async () => {
+
+    const serverPort = await getFreePort();
+    server = await start(serverPort);
+    client = new WalletIndexerApi({
+      transport: {
+        host: "localhost",
+        port: serverPort,
+        type: "http",
+      },
+    });
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  afterEach(async () => {
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  afterAll(async () => {
+  });
+
+  it("should retrieve nft contracts", async () => {
+    let val = await client.getNFTContracts("testnet", "scratch.testnet");
+    assert(val.length >=0, "Returns a set of tokens properly")
+    val = await client.getNFTContracts("mainnet", "shipsgold.near");
+    assert(val.length >=0, "Returns a set of tokens properly")
+  })
+
+});

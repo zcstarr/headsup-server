@@ -1,0 +1,38 @@
+{
+  "tagFormat": "${version}",
+  "branch": "main",
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/changelog",
+    "@semantic-release/github",
+    "@semantic-release/git",
+    "@semantic-release/npm"
+  ],
+  "verifyConditions": [
+    "@semantic-release/changelog",
+    "@semantic-release/npm",
+    "@semantic-release/git",
+    "@semantic-release/github",
+    "@open-rpc/semantic-release-plugin"
+  ],
+  "prepare": [
+    "@open-rpc/semantic-release-plugin"
+  ],
+  "publish": [
+    [
+      "@semantic-release/exec",
+      {
+          "publishCmd": "./publish.sh"
+      }
+    ], 
+    "@semantic-release/github",
+    "@semantic-release/npm"
+  ],
+  "success": [
+    "@semantic-release/github"
+  ],
+  "fail": [
+    "@semantic-release/github"
+  ]
+}

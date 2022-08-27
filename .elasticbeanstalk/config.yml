@@ -1,0 +1,6 @@
+
+global:
+  application_name: headsup-server 
+  default_ec2_keyname: headsup-server-deployer
+  default_region: us-east-2
+  sc: git

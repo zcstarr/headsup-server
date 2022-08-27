@@ -1,0 +1,138 @@
+version: 2
+
+aliases:
+  # -------------------------
+  #      ALIASES: Caches
+  # -------------------------
+  - &restore-deps-cache
+    key: deps-cache-{{ checksum "package.json" }}
+
+  - &save-deps-cache
+    key: deps-cache-{{ checksum "package.json" }}
+    paths:
+      - ~/headsup-server/node_modules
+
+  # -------------------------
+  #  ALIASES: Branch Filters
+  # -------------------------
+  - &filter-only-master
+    branches:
+      only: main
+  - &filter-only-semantic-pr
+    branches:
+      only:  /^(pull|fix|feat|dependabot)\/.*$/
+
+defaults: &defaults
+  working_directory: ~/headsup-server
+
+jobs:
+
+  build:
+    <<: *defaults
+    docker:
+      - image: circleci/node:15
+    steps:
+      - checkout
+      - restore_cache: *restore-deps-cache
+      - run: npm install
+      - run: npm run build
+      - save_cache: *save-deps-cache
+
+  release:
+    <<: *defaults
+    docker:
+      - image: circleci/node:15
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm install semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/github @semantic-release/npm @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/exec @qiwi/semantic-release-gh-pages-plugin @open-rpc/semantic-release-plugin
+      - run: ./node_modules/.bin/semantic-release --branches main
+
+  ensure_base_stacks:
+    <<: *defaults
+    docker:
+      - image: circleci/python:3.7-stretch
+    steps:
+      - checkout
+      - run:
+          name: Installing deployment dependencies
+          working_directory: /
+          command: |
+            sudo apt-get -y -qq update
+            sudo apt-get install python-pip python-dev build-essential
+            sudo pip install --upgrade setuptools
+            sudo pip install awscli --upgrade
+      - run:
+          name: Ensure Base
+          command: ./cfn/init-base.sh
+          no_output_timeout: '30m'
+
+  ensure_production_stacks:
+    <<: *defaults
+    docker:
+      - image: circleci/python:3.7-stretch
+    steps:
+      - checkout
+      - run:
+          name: Installing deployment dependencies
+          working_directory: /
+          command: |
+            sudo apt-get -y -qq update
+            sudo apt-get install python-pip python-dev build-essential
+            sudo pip install --upgrade setuptools
+            sudo pip install awscli --upgrade
+      - run:
+          name: Ensure Production
+          command: ./cfn/init-production.sh
+          no_output_timeout: '30m'
+
+  release_production:
+    <<: *defaults
+    docker:
+      - image: circleci/python:3.7-stretch
+    steps:
+      - checkout
+      - run:
+          name: Installing deployment dependencies
+          working_directory: /
+          command: |
+            sudo apt-get -y -qq update
+            sudo apt-get install python-pip python-dev build-essential
+            sudo pip install --upgrade setuptools
+            sudo pip install awsebcli --upgrade
+      - run:
+          name: Deploying Headsup Server API 
+          command: eb deploy headsup-server-production 
+          no_output_timeout: '30m'
+
+workflows:
+  version: 2
+  analysis:
+    jobs:
+      - build:
+          filters: *filter-only-semantic-pr
+
+  release:
+    jobs:
+      - build:
+          filters: *filter-only-master
+      - ensure_base_stacks:
+          filters: *filter-only-master
+      - ensure_production_stacks:
+          filters: *filter-only-master
+          requires:
+            - ensure_base_stacks
+      - hold:
+          filters: *filter-only-master
+          type: approval
+          requires:
+            - ensure_production_stacks
+      - release:
+          filters: *filter-only-master
+          requires:
+            - hold
+      - release_production:
+          filters: *filter-only-master
+          requires:
+            - hold
+            - release
