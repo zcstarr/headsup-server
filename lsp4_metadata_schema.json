@@ -16,7 +16,7 @@
           "$ref": "#/definitions/links"
         },
         "icon": {
-          "$ref": "#/definitions/icon"
+          "$ref": "#/definitions/icons"
         },
         "images": {
           "$ref": "#/definitions/images"
@@ -37,8 +37,8 @@
         "$ref": "#/definitions/link"
       }
     },
-    "icon": {
-      "title": "icon",
+    "icons": {
+      "title": "icons",
       "type": "array",
       "items": {
         "$ref": "#/definitions/image"
