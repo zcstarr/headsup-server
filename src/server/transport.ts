@@ -12,6 +12,7 @@ import express, {Express, Router} from 'express'
 import { pinata } from "../config";
 import { encodeJSONURLValue } from "./erc725";
 import { LSP4Metadata } from "../generated/lsp4_metadata_schema";
+import { getFeedAndTranslateData } from "../lib";
 
 const router = Router();
 interface HTTPServerTransportOptions extends ServerOptions {
@@ -20,13 +21,17 @@ interface HTTPServerTransportOptions extends ServerOptions {
   cors?: cors.CorsOptions;
 }
 
+router.get("/feed/:feedAddr/rss",async (req,res)=>{
+
+  res.setHeader("Content-Type", "application/rss+xml; charset=utf-8")
+  const rssFeed = await getFeedAndTranslateData(req.params.feedAddr)
+  res.end(rssFeed)
+});
+
 router.post("/image",(req,res)=>{
   const form = formidable();
-  let cid;
   form.parse(req, async (err, fields, files: any) => {
     if (err) throw err;
-    console.log("fields: ", fields);
-    console.log("files: ", files);
     const rs = fs.createReadStream(files.entryImage.filepath);
     const pinResponse = await pinata.pinFileToIPFS(rs, {});
     const responseJson = {
@@ -34,7 +39,6 @@ router.post("/image",(req,res)=>{
     };
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify(responseJson));
-    console.log(responseJson);
   });
 });
 
@@ -88,7 +92,6 @@ router.post('/covermeta',(req,res)=>{
     };
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify(responseJson));
-    console.log(responseJson);
   });
 });
 

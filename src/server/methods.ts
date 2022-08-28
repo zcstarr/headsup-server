@@ -4,6 +4,7 @@ import {LSP4Metadata} from "../generated/lsp4_metadata_schema"
 import createNftFeedMetadata from "../api";
 import { pinata } from "../config";
 import { encodeJSONURLValue } from "./erc725";
+
 export interface HeadsupServerMapping extends MethodMapping {
   createNftFeedMetadata: types.CreateNftFeedMetadata;
 }
