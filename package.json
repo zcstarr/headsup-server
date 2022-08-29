@@ -5,6 +5,9 @@
  "publishConfig": {
   "access": "public"
  },
+ "engines": {
+  "node": ">=16.0.0"
+ },
  "author": {
   "name": "Zane",
   "email": "zane@ships.gold"
