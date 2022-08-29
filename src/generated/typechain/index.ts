@@ -3,3 +3,4 @@
 /* eslint-disable */
 export type { HeadsUp } from "./HeadsUp";
 export type { HeadsUpFactory } from "./HeadsUpFactory";
+export type { LSP8IdentifiableDigitalAsset } from "./LSP8IdentifiableDigitalAsset";
