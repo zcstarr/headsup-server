@@ -223,12 +223,12 @@
           {
             "Namespace": "aws:elasticbeanstalk:application:environment",
             "OptionName": "PINATA_API_KEY",
-            "Value": "{{resolve:ssm-secure:PINATA_API_KEY:1}}" 
+            "Value": "{{resolve:ssm:PINATA_API_KEY:1}}" 
           },
           {
             "Namespace": "aws:elasticbeanstalk:application:environment",
             "OptionName": "PINATA_SECRET",
-            "Value": "{{resolve:ssm-secure:PINATA_SECRET:1}}" 
+            "Value": "{{resolve:ssm:PINATA_SECRET:1}}" 
           },
           {
             "Namespace": "aws:elasticbeanstalk:environment:process:default",
