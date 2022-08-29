@@ -6,6 +6,7 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import BN from 'bn.js';
 import LSP8DigitalAssetABI from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json';
+import axios from 'axios'
 import { HeadsUpDatum } from '../generated/headsup_datum_schema';
 import HeadsUpABI from '../artifacts/HeadsUp.json';
 import { HeadsUp, LSP8IdentifiableDigitalAsset } from '../generated/typechain';
@@ -14,7 +15,6 @@ import { fetchLSP4Metadata } from './lsp4'
 import { fetchLSP8Metadata } from './lsp8'
 import { Image, LSP4Metadata } from '../generated/lsp4_metadata_schema'
 import { decodeJSONUrlValue, getTokenIdMetadataKey } from '../server/erc725'
-import axios from 'axios'
 
 interface ChannelData{
   channelTitle: string,
@@ -196,6 +196,7 @@ function buildChannel(ch: ChannelData, rssItems: RssItem[]){
     </image>
     ` : `` 
   const data = 
+`<?xml version="1.0" encoding="UTF-8"?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:media="http://search.yahoo.com/mrss/" version="2.0">
   <channel>
     <title>${ch.channelTitle}</title>

@@ -135,7 +135,7 @@
       "Type" : "AWS::ElasticBeanstalk::ConfigurationTemplate",
       "Properties" : {
         "ApplicationName" : { "Ref": "ApplicationName" },
-        "SolutionStackName": "64bit Amazon Linux 2 v5.4.9 running Node.js 14",
+        "SolutionStackName": "64bit Amazon Linux 2 v5.5.5 running Node.js 16",
         "OptionSettings": [
           {
             "Namespace": "aws:autoscaling:launchconfiguration",
@@ -219,6 +219,16 @@
             "Namespace": "aws:elasticbeanstalk:application:environment",
             "OptionName": "NPM_USE_PRODUCTION",
             "Value": true 
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "PINATA_API_KEY",
+            "Value": "{{resolve:ssm:PINATA_API_KEY}}" 
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "PINATA_SECRET",
+            "Value": "{{resolve:ssm:PINATA_SECRET}}" 
           },
           {
             "Namespace": "aws:elasticbeanstalk:environment:process:default",
