@@ -21,7 +21,7 @@
       "Description": "The Key Pair to launch instances with",
       "Type": "String",
       "Default": "a1.medium",
-      "AllowedValues": ["a1.medium"]
+      "AllowedValues": ["a1.medium", "t3.medium", "t4g.medium", "t3.small"]
     },
     "EnvironmentName": {
       "Type": "String",
