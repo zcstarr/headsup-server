@@ -93,7 +93,6 @@ export async function getTokenMetadata(feedAddr: string): Promise<SimpleMeta> {
     imageUrl = images[0][0]?.url
   }
   return {imageUrl, desc: value.LSP4Metadata.description}
-
 }
 
 export async function getIssue(feedAddr: string, issueNo: number) {

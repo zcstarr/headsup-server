@@ -139,20 +139,26 @@ export default class HTTPMixedServerTransport extends transports.ServerTransport
 
   private async httpRouterHandler(req: any, res: any): Promise<void> {
     let result = null;
+    try {
+      if (req.url.includes("rpc")) {
+        if (req.body instanceof Array) {
+          result = await Promise.all(
+            req.body.map((r: JSONRPCRequest) => super.routerHandler(r))
+          );
+        } else {
+          result = await super.routerHandler(req.body);
+        }
 
-    if (req.url.includes("rpc")) {
-      if (req.body instanceof Array) {
-        result = await Promise.all(
-          req.body.map((r: JSONRPCRequest) => super.routerHandler(r))
-        );
+        res.setHeader("Content-Type", "application/json");
+        console.log(result)
+        res.end(JSON.stringify(result));
       } else {
-        result = await super.routerHandler(req.body);
+        this.xapp(req,res);
       }
-
-      res.setHeader("Content-Type", "application/json");
-      res.end(JSON.stringify(result));
-    } else {
-      this.xapp(req,res);
+    }catch(e){
+      console.log(e);
+      res.status(400)
+      res.end()
     }
   }
 }
