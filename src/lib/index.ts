@@ -215,7 +215,7 @@ function getFeedLink(feedAddr: string){
 }
 
 function getFeedIssueLink(feedAddr: string, issueNo: number){
-  return `${config.FEED_URL}/${feedAddr}/${issueNo}`
+  return `${config.FEED_URL}/${feedAddr}/entry/${issueNo}`
 }
 
 export function createFeedItem(rssItem: RssItem){
