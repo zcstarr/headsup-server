@@ -9,7 +9,7 @@
   },
   {
     "ParameterKey": "InstanceType",
-    "ParameterValue": "t3.small"
+    "ParameterValue": "t4g.medium"
   },
   {
     "ParameterKey": "DomainName",
