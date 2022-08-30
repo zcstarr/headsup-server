@@ -231,6 +231,11 @@
             "Value": "{{resolve:ssm:PINATA_SECRET:1}}" 
           },
           {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "HEAD_ENV",
+            "Value": "production" 
+          },
+          {
             "Namespace": "aws:elasticbeanstalk:environment:process:default",
             "OptionName": "Port",
             "Value": 8081
