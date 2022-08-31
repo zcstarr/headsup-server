@@ -32,7 +32,7 @@ PINATA_API_KEY=yourkey PINATA_SECRET=yoursecret npm run start
 ```
 
 ### Deployment 
-Deployment uses CI with circle ci and is currently deployed via cloudformation configuration and elasticbeanstalk. The server is deployed that way as well. It uses the script
+Deployment uses CI with circle ci and is currently deployed via cloudformation configuration and elasticbeanstalk.
 
 ### Team
 Zane Starr - zane[at]gmail.com
