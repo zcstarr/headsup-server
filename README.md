@@ -18,7 +18,7 @@ This is most easily triggable from https://github.com/zcstarr/headsup for test i
 ### Getting Started
 
 ### Caveat
-Doing this requires a (PINATA_KEY)[https://pinata.cloud] a deployed version is already up and running
+Doing this requires a [PINATA_KEY](https://pinata.cloud) a deployed version is already up and running
 at https://api.feedhead.xyz
 #### Launching your own local server
 
