@@ -25,21 +25,31 @@ interface HTTPServerTransportOptions extends ServerOptions {
 router.get("/feed/:feedAddr/rss",async (req,res)=>{
 
   res.setHeader("Content-Type", "application/rss+xml; charset=utf-8")
-  const rssFeed = await getFeedAndTranslateData(req.params.feedAddr)
-  res.end(rssFeed)
+  try{
+    const rssFeed = await getFeedAndTranslateData(req.params.feedAddr)
+    res.end(rssFeed)
+  }catch(e){
+    res.status(500);
+    res.end();
+  }
 });
 
 router.post("/image",(req,res)=>{
   const form = formidable();
-  form.parse(req, async (err, fields, files: any) => {
-    if (err) throw err;
-    const rs = fs.createReadStream(files.entryImage.filepath);
-    const pinResponse = await pinata.pinFileToIPFS(rs, {});
-    const responseJson = {
-      cid: pinResponse.IpfsHash
-    };
-    res.setHeader("Content-Type", "application/json");
-    res.end(JSON.stringify(responseJson));
+  form.parse(req, async (err, _fields, files: any) => {
+    try {
+      if (err) throw err;
+      const rs = fs.createReadStream(files.entryImage.filepath);
+      const pinResponse = await pinata.pinFileToIPFS(rs, {});
+      const responseJson = {
+        cid: pinResponse.IpfsHash
+      };
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify(responseJson));
+    }catch(e){
+      res.status(500);
+      res.end();
+    }
   });
 });
 
@@ -48,49 +58,55 @@ router.post('/covermeta',(req,res)=>{
   let cid;
   form.parse(req, async (err, fields, files: any) => {
     if (err) throw err;
-    const rs = fs.createReadStream(files.coverImage.filepath);
-    const pinResponse = await pinata.pinFileToIPFS(rs, {});
 
-    const file = await fs.readFileSync(files.coverImage.filepath);
-    const hash = new Keccak(256);
-    hash.update(file);
-    const hashStr = hash.digest("hex");
-    const { width, height } = await imageSize(file);
-    const payloadData: LSP4Metadata = {
-      description: fields.feedDesc as string,
-      links: [
-        {
-          title: `The ${fields.feedAddr} feed`,
-          url: `${config.FRONTEND_URL}/feed/${fields.feedAddr}/rss`
-        }
-      ],
-      assets: [],
-      icon: [],
-      images: [
-        [
+    try {
+      const rs = fs.createReadStream(files.coverImage.filepath);
+      const pinResponse = await pinata.pinFileToIPFS(rs, {});
+
+      const file = await fs.readFileSync(files.coverImage.filepath);
+      const hash = new Keccak(256);
+      hash.update(file);
+      const hashStr = hash.digest("hex");
+      const { width, height } = await imageSize(file);
+      const payloadData: LSP4Metadata = {
+        description: fields.feedDesc as string,
+        links: [
           {
-            width,
-            hashFunction: "keccak256(bytes)",
-            hash: hashStr,
-            height,
-            url: `ipfs://${pinResponse.IpfsHash}`
+            title: `The ${fields.feedAddr} feed`,
+            url: `${config.FRONTEND_URL}/feed/${fields.feedAddr}/rss`
           }
+        ],
+        assets: [],
+        icon: [],
+        images: [
+          [
+            {
+              width,
+              hashFunction: "keccak256(bytes)",
+              hash: hashStr,
+              height,
+              url: `ipfs://${pinResponse.IpfsHash}`
+            }
+          ]
         ]
-      ]
-    };
-    const result = await pinata.pinJSONToIPFS(
-      { LSP4Metadata: payloadData },
-      {}
-    );
-    const jsonUrl = encodeJSONURLValue(result.IpfsHash, {
-      LSP4Metadata: payloadData
-    });
-    const responseJson = {
-      cid: result.IpfsHash,
-      jsonUrl
-    };
-    res.setHeader("Content-Type", "application/json");
-    res.end(JSON.stringify(responseJson));
+      };
+      const result = await pinata.pinJSONToIPFS(
+        { LSP4Metadata: payloadData },
+        {}
+      );
+      const jsonUrl = encodeJSONURLValue(result.IpfsHash, {
+        LSP4Metadata: payloadData
+      });
+      const responseJson = {
+        cid: result.IpfsHash,
+        jsonUrl
+      };
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify(responseJson));
+    }catch(e){
+      res.status(500);
+      res.end();
+    }
   });
 });
 
@@ -154,6 +170,11 @@ export default class HTTPMixedServerTransport extends transports.ServerTransport
         res.end(JSON.stringify(result));
       } else {
         this.xapp(req,res);
+        // eslint-disable-next-line @typescript-eslint/no-shadow
+        this.xapp.use((err:any ,_req:any,res:any,_next:any)=>{
+          if (err) {
+            res.status(err.statusCode || 500).json(err.message);  
+          }});
       }
     }catch(e){
       console.log(e);
